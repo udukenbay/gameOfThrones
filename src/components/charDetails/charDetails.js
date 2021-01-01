@@ -3,6 +3,17 @@ import './charDetails.css';
 import gotService from '../../services/gotService';
 import Spinner from '../spinner';
 import ErrorMessage from '../errorMessage';
+
+const Field = ({item, field, label}) => {
+    return (
+        <li className="list-group-item d-flex justify-content-between">
+            <span className="term">{label}</span>
+            <span>{[field]}</span>
+        </li>
+    )
+}
+
+export {Field};
 export default class CharDetails extends Component {
 
     gotService = new gotService();
@@ -76,7 +87,8 @@ export default class CharDetails extends Component {
             <div className="char-details rounded">
                 <h4>{name ? name : 'no data:'}</h4>
                 <ul className="list-group list-group-flush">
-                    <li className="list-group-item d-flex justify-content-between">
+                    {this.props.children}
+                    {/* <li className="list-group-item d-flex justify-content-between">
                         <span className="term">Gender</span>
                         <span>{gender ? gender : 'no data:'}</span>
                     </li>
@@ -91,7 +103,7 @@ export default class CharDetails extends Component {
                     <li className="list-group-item d-flex justify-content-between">
                         <span className="term">Culture</span>
                         <span>{culture ? culture : 'no data:'}</span>
-                    </li>
+                    </li> */}
                 </ul>
             </div>
         );
