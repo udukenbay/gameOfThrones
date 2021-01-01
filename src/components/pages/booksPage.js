@@ -2,24 +2,13 @@ import React, {Component} from 'react';
 import ItemList from '../itemList';
 import ErrorMessage from '../errorMessage';
 import gotService from '../../services/gotService';
+import {withRouter} from 'react-router-dom';
 
-
-import ItemDetails, {Field} from '../itemDetails';
-import RowBlock from '../rowBlock';
-
-
-export default class BooksPage extends Component {
+class BooksPage extends Component {
     gotService = new gotService();
 
     state = {
-        selectedBook: null,
         error: false
-    }
-
-    onItemSelected = (id) => {
-        this.setState({
-            selectedBook: id
-        })
     }
 
     componentDidCatch() {
@@ -43,3 +32,5 @@ export default class BooksPage extends Component {
         )
     }
 }
+
+export default withRouter(BooksPage);
