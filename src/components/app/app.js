@@ -2,16 +2,16 @@ import React, {Component} from 'react';
 import {Col, Row, Container} from 'reactstrap';
 import Header from '../header';
 import RandomChar from '../randomChar';
-import CharacterPage from '../characterPage';
 import ErrorMessage from '../errorMessage';
-import './app.css';
-
-import CharDetails from '../charDetails';
-import ItemList from '../itemList';
+import {CharacterPage, BooksPage, HousesPage} from '../pages';
 import gotService from '../../services/gotService';
 
-export default class App extends Component {
+import './app.css';
 
+import ItemDetails from '../itemDetails';
+import ItemList from '../itemList';
+
+export default class App extends Component {
     gotService = new gotService();
     
     state = {
@@ -19,21 +19,26 @@ export default class App extends Component {
         error: false
     };
 
+    componentDidCatch() {
+        this.setState({
+            error: true
+        })
+    }
+
     toggleRandomChar = () => {
         this.setState((state) => {
             return {
                 showRandomChar: !state.showRandomChar
             }
         });
-    }
+    };
     
     render() {
+        const char = this.state.showRandomChar ? <RandomChar/> : null;
 
-        if(this.state.error) {
+        if (this.state.error) {
             return <ErrorMessage/>
         }
-
-        const char = this.state.showRandomChar ? <RandomChar/> : null;
 
         return (
             <> 
@@ -50,28 +55,8 @@ export default class App extends Component {
                         </Col>
                     </Row>
                     <CharacterPage/>
-                    <Row>
-                        <Col md='6'>
-                            <ItemList 
-                                onItemSelected={this.onItemSelected}
-                                getData={this.gotService.getAllBooks}
-                                renderItem={(item) => item.name}/>
-                        </Col>
-                        <Col md='6'>
-                            <CharDetails charId = {this.state.selectedChar} />
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col md='6'>
-                            <ItemList 
-                                onItemSelected={this.onItemSelected}
-                                getData={this.gotService.getAllHouses}
-                                renderItem={(item) => item.name}/>
-                        </Col>
-                        <Col md='6'>
-                            <CharDetails charId = {this.state.selectedChar} />
-                        </Col>
-                    </Row>
+                    <BooksPage/>
+                    <HousesPage/>
                 </Container>
             </>
         );
