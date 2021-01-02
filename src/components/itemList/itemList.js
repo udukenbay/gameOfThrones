@@ -2,11 +2,23 @@ import React, {Component} from 'react';
 import ErrorMessage from '../errorMessage';
 import Spinner from '../spinner/';
 import './itemList.css';
+import PropTypes from 'prop-types';
+
 export default class ItemList extends Component {
 
     state = {
         itemList: null,
         error: false
+    }
+
+
+    static defaultProps = {
+        onItemSelected: {}
+    }
+
+    static propTypes = {
+        onItemSelected: PropTypes.func
+        // getData: PropTypes.arrayOf(PropTypes.object)
     }
 
     componentDidMount() {
@@ -74,8 +86,4 @@ export default class ItemList extends Component {
             </ul>
         );
     }
-}
-
-ItemList.defaultProps = {
-    onItemSelected: {}
 }
