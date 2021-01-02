@@ -87,3 +87,12 @@ export default class ItemList extends Component {
         );
     }
 }
+
+const f = (a) => {
+    console.log(a);
+    return = (b) => {
+        console.log(a + b);
+    }
+}
+
+f(1)(2);
