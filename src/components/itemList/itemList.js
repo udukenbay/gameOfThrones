@@ -1,59 +1,17 @@
 import React, {Component} from 'react';
-import ErrorMessage from '../errorMessage';
 import Spinner from '../spinner/';
 import './itemList.css';
-import PropTypes from 'prop-types';
+import gotService from '../../services/gotService';
 
-export default class ItemList extends Component {
-
-    state = {
-        itemList: null,
-        error: false
-    }
-
-
-    static defaultProps = {
-        onItemSelected: {}
-    }
-
-    static propTypes = {
-        onItemSelected: PropTypes.func
-        // getData: PropTypes.arrayOf(PropTypes.object)
-    }
-
-    componentDidMount() {
-        const {getData} = this.props;
-
-        getData()
-            .then((itemList) => {
-                this.setState({
-                    itemList,
-                    error: false
-                });
-            })
-            .catch(() => {this.onError()});
-    }
-
-    componentDidCatch(){
-        this.setState({
-            itemList: null,
-            error: true
-        })
-    }
-
-    onError(status){
-        this.setState({
-            itemList: null,
-            error: true
-        })
-    }
+class ItemList extends Component {
 
     renderItems(arr) {
+
         return arr.map((item) => {
             const {id} = item
+
             const label = this.props.renderItem(item);
 
-            // const {id, name} = item;
             return (
                 <li
                     key={id}
@@ -68,17 +26,9 @@ export default class ItemList extends Component {
 
 
     render() {
-        const {itemList, error} = this.state;
 
-        if(error){
-            return <ErrorMessage/>
-        }
-
-        if(!itemList) {
-            return <Spinner/>
-        }
-
-        const items = this.renderItems(itemList);
+        const {data} = this.props;
+        const items = this.renderItems(data);
 
         return (
             <ul className="item-list list-group">
@@ -88,11 +38,48 @@ export default class ItemList extends Component {
     }
 }
 
-const f = (a) => {
-    console.log(a);
-    return = (b) => {
-        console.log(a + b);
+
+ItemList.defaultProps = {
+    onItemSelected: () => {}
+}
+
+// const f = (a) => {
+//     console.log(a);
+//     return (b) => {
+//         console.log(a + b);
+//     }
+// }
+
+// f(1)(2);
+
+const withData = (View, getData) => {
+    return class extends Component {
+
+        state = {
+            data: null
+        }
+    
+        componentDidMount() {
+    
+            getData()
+                .then( (data) => {
+                    this.setState({
+                        data
+                    })
+                })
+        }
+
+        render() {
+            const {data} = this.state;
+
+            if(!data) {
+                return <Spinner/>
+            }
+
+            return <View {...this.props} data={data} />
+        }
     }
 }
 
-f(1)(2);
+const {getAllCharacters} = new gotService();
+export default withData(ItemList, getAllCharacters);
